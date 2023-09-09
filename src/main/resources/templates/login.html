@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+
+	<!--Import Google Icon Font-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Import materialize.css-->
+
+
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+
+	<style type="text/css">
+		form input[type=submit] {
+			color: white;
+		}
+		
+		form {
+			margin-left: 30%;
+			margin-top: 8%;
+		}
+		
+		.col .row {
+			margin-right: 0rem;
+		}
+		
+	</style>
+</head>
+
+<body>
+
+
+	<form th:action="@{/login}" method="post" class="col s12">
+	<h4>Acesso ao sistema</h4>
+
+		<div class="row">
+			<div class="input-fiel col s6">
+				<label>Login</label>
+				<input type='text' name='username' style="border-radius: 10px;">
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="input-fiel col s6">
+				<label>Senha</label>
+				<input type='password' name='password' style="border-radius: 10px;" />
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="input-fiel col s6">
+				<input name="submit" type="submit" value="Acessar" class="waves-effect waves-light btn" />
+			</div>
+		</div>
+	</form>
+
+
+
+
+
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+	<!--JavaScript at end of body for optimized loading
+	<script type="text/javascript" src="/materialize/js/materialize.js"></script>
+	<script type="text/javascript" src="/materialize/js/materialize.min.js"></script>
+	-->
+</body>
+
+</html>
