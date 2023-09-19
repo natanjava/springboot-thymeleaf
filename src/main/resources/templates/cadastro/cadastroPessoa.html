@@ -148,11 +148,9 @@
 
 				<!--      BOTÕES     -->
 				<div class="row">
-					<div class="input-field col s12">
-						<input class="waves-effect waves-light btn" type="submit" value="Salvar">
-						<button class="waves-effect waves-light btn"
-							onclick="document.getElementById('formpessoa').reset();">
-							Novo</button>
+					<input class="input-field col s12">
+						<button class="waves-effect waves-light btn" type="submit"> Save </button>
+						<buton type="button" class="waves-effect waves-light btn" onclick="limparForm();"> Clean Form</input>
 					</div>
 				</div>
 			</form>
@@ -184,7 +182,7 @@
 						<input class="waves-effect waves-light btn" type="submit" value="PDF"
 							onclick="document.getElementById('pesquisarpessoa').method = 'get'" />
 						<input class="waves-effect waves-light btn" type="submit" value="Buscar"/>
-						<a class="waves-effect waves-light btn" href="/listaPessoas">Lista de pessoas</a>
+						<a class="waves-effect waves-light btn" th:href="@{/listaPessoas}">Lista de pessoas</a>
 					</div>
 				</div>
 			</form>
@@ -258,6 +256,23 @@
 		$(document).ready(function () { ... } ); Quando a tela inicia os scripts são lidos automaticamente
 	-->
 	<script type="text/javascript">
+		
+	function limparForm() {
+			var elementos = document.getElementById("formpessoa").elements; /*Retorna os elementos html dentro do form*/
+				
+			document.getElementById("nome").value = '';
+			document.getElementById("sobrenome").value = '';
+			document.getElementById("dataNascimento").value = ''; 
+			document.getElementById("idade").value = '0';
+			document.getElementById("file").value = '';
+			document.getElementById("cep").value = '';
+			document.getElementById("rua").value = '';
+			document.getElementById("bairro").value = '';
+			document.getElementById("cidade").value = '';
+			document.getElementById("uf").value = '';
+			document.getElementById("ibge").value = '';
+			
+		}
 
 		//  transforma campo de data em calendario 
 		/*

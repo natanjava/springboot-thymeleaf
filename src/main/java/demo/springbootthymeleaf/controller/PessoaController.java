@@ -103,6 +103,7 @@ public class PessoaController {
 			*/
 			modelAndView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0, 5, Sort.by("nome"))));
 			modelAndView.addObject("pessoaobj", pessoa);
+			modelAndView.addObject("profissoes", profissaoRepository.findAll());
 			List<String> msg = new ArrayList<String>();
 			for (ObjectError objectError : bindingResult.getAllErrors()) {
 				msg.add(objectError.getDefaultMessage()); // vem das @notações dos campos da classe model
@@ -147,7 +148,6 @@ public class PessoaController {
 		modelAndView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0, 5, Sort.by("nome"))));
 		modelAndView.addObject("pessoaobj", new Pessoa());
 		return modelAndView;
-
 	}
 
 	// @RequestMapping aqui podria usar o RequestMappin mas melhor usar notacao nova
