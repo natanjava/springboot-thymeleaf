@@ -6,7 +6,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Title</title>
+	<title>Registration & Search</title>
 
 	<!--Import Google Icon Font-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -172,7 +172,7 @@
 
 					<div class="input-field col s6">
 						<label for="sexoPesquisa" class="active">By Gender</label>
-						<select class="browser-default" name="sexoPesquisa" id="sexoPesquisa">
+						<select class="browser-default" name="sexoPesquisa" id="sexoPesquisa" th:value="${sexoPesquisa}">
 							<option value="">--[Both]--</option>
 							<option value="MASCULINO" th:text="Masculin" />
 							<option value="FEMININO" th:text="Feminin" />
@@ -182,7 +182,7 @@
 					<div class="input-field col s12">
 						<input class="waves-effect waves-light btn" type="submit" value="PDF"
 							onclick="document.getElementById('pesquisarPessoa').method = 'get'" />
-						<input class="waves-effect waves-light btn" type="submit" value="Search"/>
+						<input class="waves-effect waves-light btn" type="submit" value="Search" onclick="return validateFields();"/>
 						<a class="waves-effect waves-light btn" th:href="@{/listaPessoas}">List Users</a>
 					</div>
 				</div>
@@ -228,23 +228,22 @@
 	</table>
 
 	<!-- Pagination -->
-	<div class="row" style="margin-top: 30px;">
-		<center>
+	<div class="row" style="margin-top: 30px;">		
+		<center>				
 			<span th:if="${pessoas.hasPrevious()}">
-				<a
-					th:href="@{/pessoaspag(page=${pessoas.number-1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Previous</a>
+				<a th:href="@{/pessoaspag(page=${pessoas.number - 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Anterior</a>
 			</span>
-
-			<th:block th:each="i: ${#numbers.sequence(0, pessoas.totalPages - 1)}">
+		
+			<th:block th:each="i: ${#numbers.sequence(0, pessoas.totalPages -1)}">
 				<a th:href="@{/pessoaspag(page=${i}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">[[ ${i} + 1 ]]</a>
 			</th:block>
-
+				
 			<span th:if="${pessoas.hasNext()}">
-				<a
-					th:href="@{/pessoaspag(page=${pessoas.number+1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Next</a>
+				<a th:href="@{/pessoaspag(page=${pessoas.number + 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Próximo</a>
 			</span>
 		</center>
-	<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a> 
+		<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a>
+		<a class="waves-effect waves-light btn" th:href="@{/infoPage}">More Infos</a>
 	</div>
 	<br>
 
@@ -372,6 +371,19 @@
 			}
 
 			document.getElementById('idade').value = age;
+		}
+		
+		
+		function validateFields() {
+		    var nomePesquisa = document.getElementById("nomePesquisa").value;
+		    var sexoPesquisa = document.getElementById("sexoPesquisa").value;
+		
+		    if (nomePesquisa === "" && sexoPesquisa === "") {
+		        alert("Fields BY NAME or BY GENDER required for the search.");
+		        return false; // Impede o envio do formulário
+		    }
+		
+		    return true; // Permite o envio do formulário se pelo menos um campo estiver preenchido
 		}
 
 

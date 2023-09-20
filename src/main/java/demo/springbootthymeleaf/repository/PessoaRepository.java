@@ -50,7 +50,7 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 		
 		// Configurando pesquisa para consulta por partes do nome no banco (análogo ao LIKE do SQL)
 		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAny()
-				.withMatcher("sexopessoa", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+				.withMatcher("sexo", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 		
 		// Une objeto com valor e a configuração para consultar
 		Example<Pessoa> example = Example.of(pessoa, exampleMatcher);
@@ -68,7 +68,7 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 		// Configurando pesquisa para consulta por partes do nome no banco (análogo ao LIKE do SQL)
 		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAny()
 				.withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-				.withMatcher("sexopessoa", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+				.withMatcher("sexo", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 		
 		// Une objeto com valor e a configuração para consultar
 		Example<Pessoa> example = Example.of(pessoa, exampleMatcher);
