@@ -17,72 +17,63 @@ import demo.springbootthymeleaf.model.Pessoa;
 @Transactional
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 	
-	@Query("select p from Pessoa p where p.nome like %?1% ")
-	List<Pessoa> findPessoaByName(String nome);
+	@Query("select p from Pessoa p where p.nome like %?1%")
+	List<Pessoa> findByName(String nome);	
 	
-	@Query("select p from Pessoa p where p.sexopessoa like %?1% ")
-	List<Pessoa> findPessoaBySexo(String sexopessoa);
+	@Query("select p from Pessoa p where p.nome like %?1% and p.sexopessoa = ?2")
+	List<Pessoa> findByNameSexo(String nome, String sexo);	
 	
-	@Query("select p from Pessoa p where p.nome like %?1% and p.sexopessoa = ?2 ")
-	List<Pessoa> findPessoaByNameSexo(String nome, String sexopessoa);
+	@Query("select p from Pessoa p where p.sexopessoa = ?1")
+	List<Pessoa> findBySexo(String sexo);
 	
-	default Page<Pessoa> findPessoaByNamePage(String nome, Pageable pageable) {
+	// PAGINAÇÃO (Pesquisa de Pessoa - NOME)
+	default Page<Pessoa> findByNamePage(String nome, Pageable pageable) {
 		
 		Pessoa pessoa = new Pessoa();
 		pessoa.setNome(nome);
 		
-		/* Estamos configurando a pesquisa para consultar por partes do nome no banco de dados,
-		 * igual a like no SQL.  */
-		ExampleMatcher ignoringExampleMatcher = ExampleMatcher.matchingAny()
-			      .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+		// Configurando pesquisa para consulta por partes do nome no banco (análogo ao LIKE do SQL)
+		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAny()
+				.withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 		
-		/*Une o objeto com o valor e a configuração para consultar*/
-		Example<Pessoa> example = Example.of(pessoa, ignoringExampleMatcher);
+		// Une objeto com valor e a configuração para consultar
+		Example<Pessoa> example = Example.of(pessoa, exampleMatcher);
 		
-		/*Executa no banco e retorna*/
-		Page<Pessoa> pessoas = findAll(example, pageable);
-		
-		return pessoas; 
-	} 
-	
-	
-	default Page<Pessoa> findPessoaBySexoPage(String sexo, Pageable pageable) {
-		
-		Pessoa pessoa = new Pessoa();
-		pessoa.setNome(sexo);
-		
-		/* Estamos configurando a pesquisa para consultar por partes do nome no banco de dados,
-		 * igual a like no SQL.  */
-		ExampleMatcher ignoringExampleMatcher = ExampleMatcher.matchingAny()
-			      .withMatcher("sexo", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
-		
-		/*Une o objeto com o valor e a configuração para consultar*/
-		Example<Pessoa> example = Example.of(pessoa, ignoringExampleMatcher);
-		
-		/*Executa no banco e retorna*/
-		Page<Pessoa> pessoas = findAll(example, pageable);
-		
-		return pessoas; 
+		return findAll(example, pageable);		
 	}
 	
+	// PAGINAÇÃO (Pesquisa de Pessoa - SEXO	)
+	default Page<Pessoa> findBySexoPage(String sexo, Pageable pageable) {
+		
+		Pessoa pessoa = new Pessoa();
+		pessoa.setSexopessoa(sexo);
+		
+		// Configurando pesquisa para consulta por partes do nome no banco (análogo ao LIKE do SQL)
+		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAny()
+				.withMatcher("sexopessoa", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+		
+		// Une objeto com valor e a configuração para consultar
+		Example<Pessoa> example = Example.of(pessoa, exampleMatcher);
+		
+		return findAll(example, pageable);		
+	}
 	
-	
-	default Page<Pessoa> findPessoaBySexoNamePage(String nome, String sexo, Pageable pageable) {
+	// PAGINAÇÃO (Pesquisa de Pessoa - NOME e SEXO)
+	default Page<Pessoa> findByNameSexoPage(String nome, String sexo, Pageable pageable) {
 		
 		Pessoa pessoa = new Pessoa();
 		pessoa.setNome(nome);
 		pessoa.setSexopessoa(sexo);
 		
-		ExampleMatcher ignoringExampleMatcher = ExampleMatcher.matchingAny()
-			      .withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
-			      .withMatcher("sexo", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
+		// Configurando pesquisa para consulta por partes do nome no banco (análogo ao LIKE do SQL)
+		ExampleMatcher exampleMatcher = ExampleMatcher.matchingAny()
+				.withMatcher("nome", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+				.withMatcher("sexopessoa", ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase());
 		
-		Example<Pessoa> example = Example.of(pessoa, ignoringExampleMatcher);
+		// Une objeto com valor e a configuração para consultar
+		Example<Pessoa> example = Example.of(pessoa, exampleMatcher);
 		
-		Page<Pessoa> pessoas = findAll(example, pageable);
-		
-		return pessoas;
-		
+		return findAll(example, pageable);		
 	}
 
 }

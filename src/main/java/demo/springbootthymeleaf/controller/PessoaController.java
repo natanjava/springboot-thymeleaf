@@ -72,13 +72,13 @@ public class PessoaController {
 	@GetMapping("/pessoaspag")
 	public ModelAndView carregaPessoaPorPaginacao(
 			@PageableDefault(size=5) Pageable pageable,
-			ModelAndView model, @RequestParam("nomepesquisa") String nomepesquisa) {
+			ModelAndView model, @RequestParam("nomePesquisa") String nomepesquisa) {
 		
 		//Page<Pessoa> pagePessoa = pessoaRepository.findAll(pageable); 
-		Page<Pessoa> pagePessoa = pessoaRepository.findPessoaByNamePage(nomepesquisa, pageable); 
+		Page<Pessoa> pagePessoa = pessoaRepository.findByNamePage(nomepesquisa, pageable); 
 		model.addObject("pessoas", pagePessoa);
 		model.addObject("pessoaobj", new Pessoa());
-		model.addObject("nomepesquisa", nomepesquisa);
+		model.addObject("nomePesquisa", nomepesquisa);
 		model.setViewName("cadastro/cadastroPessoa");
 		
 		return model; 
@@ -178,87 +178,74 @@ public class PessoaController {
 		return modelAndView;
 	}
 	
-	// PosMapping  and RequestMapping are equivalent
-	@PostMapping("**/pesquisarpessoa")
+	@PostMapping("**/pesquisarPessoa")
 	public ModelAndView pesquisar(
-			@RequestParam("nomepesquisa") String nomepesquisa, 
-			@RequestParam("pesqsexo") String pesqsexo, 
+			@RequestParam("nomePesquisa") String nomePesquisa,
+			@RequestParam("sexoPesquisa") String sexoPesquisa,
 			@PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
 		
 		Page<Pessoa> pessoas = null;
 		
-		/*
-		if (pesqsexo != null && !pesqsexo.isEmpty()) {
-			pessoas = pessoaRepository.findPessoaBySexoNamePage(nomepesquisa, pesqsexo, pageable);
-		}else {
-			pessoas = pessoaRepository.findPessoaByNamePage(nomepesquisa, pageable);
+		if (sexoPesquisa != null && !sexoPesquisa.isEmpty() 
+				&& nomePesquisa != null && !nomePesquisa.isEmpty()) {
+			pessoas = pessoaRepository.findByNameSexoPage(nomePesquisa, sexoPesquisa, pageable);
+		} else if (nomePesquisa != null && !nomePesquisa.isEmpty()) {
+			pessoas = pessoaRepository.findByNamePage(nomePesquisa, pageable);
+		} else if (sexoPesquisa != null && !sexoPesquisa.isEmpty()) {
+			pessoas = pessoaRepository.findBySexoPage(sexoPesquisa, pageable);
 		}
-		 */
 		
-		/*
-		 */
-		if (pesqsexo != null && !pesqsexo.isEmpty() 
-				&& nomepesquisa != null && !nomepesquisa.isEmpty()) {
-			pessoas = pessoaRepository.findPessoaBySexoNamePage(nomepesquisa, pesqsexo, pageable);
-		} else if (nomepesquisa != null && !nomepesquisa.isEmpty()) {
-			pessoas = pessoaRepository.findPessoaByNamePage(nomepesquisa, pageable);
-		} else if (pesqsexo != null && !pesqsexo.isEmpty()) {
-			pessoas = pessoaRepository.findPessoaBySexoPage(pesqsexo, pageable);
-		}
-	
 		ModelAndView modelAndView = new ModelAndView("cadastro/cadastroPessoa");
 		modelAndView.addObject("pessoas", pessoas);
 		modelAndView.addObject("pessoaobj", new Pessoa());
-		modelAndView.addObject("nomepesquisa", nomepesquisa);
-		
-		
+		modelAndView.addObject("nomePesquisa", nomePesquisa);
 		return modelAndView;
 	}
 	
-	@GetMapping("**/pesquisarpessoa")
+	//@GetMapping("**/pesquisarpessoa")
+	/*
 	public void imprimePdf(@RequestParam("nomepesquisa") String nomepesquisa,
 								  @RequestParam("pesqsexo") String pesqsexo,
 								  HttpServletRequest request,
 								  HttpServletResponse response) throws Exception {
-		
 		List<Pessoa> pessoas = new ArrayList<Pessoa>();
 		
-		if (pesqsexo != null && !pesqsexo.isEmpty()  				/*Busca por nome e sexo*/
+		if (pesqsexo != null && !pesqsexo.isEmpty()  				//Busca por nome e sexo
 				&& nomepesquisa!= null && !nomepesquisa.isEmpty()) {
 			pessoas = pessoaRepository.findPessoaByNameSexo(nomepesquisa, pesqsexo);
 			
-		} else if (nomepesquisa!= null  && !nomepesquisa.isEmpty()) { /*Busca por sexo*/
+		} else if (nomepesquisa!= null  && !nomepesquisa.isEmpty()) { //Busca por sexo
 			pessoas = pessoaRepository.findPessoaByName(nomepesquisa);
 			
-		} else if (pesqsexo!=null && !pesqsexo.isEmpty()) {      	/*Busca por sexo*/
+		} else if (pesqsexo!=null && !pesqsexo.isEmpty()) {      	//Busca por sexo
 			pessoas = pessoaRepository.findPessoaBySexo(pesqsexo);
 		
-		} else {   													/*Busca por todos*/
+		} else {   													//Busca por todos
 			Iterable<Pessoa> iterator = pessoaRepository.findAll();
 			for (Pessoa pessoa : iterator) {
 				pessoas.add(pessoa);
 			}
 		}
 		
-		/*Chama o servico que faz a geracao de relatorio*/
+		//Chama o servico que faz a geracao de relatorio
 		byte[] pdf = reportUtil.gerarRelatorio(pessoas, "pessoa", request.getServletContext());
 		
-		/* Tamanho da resposta pro navegador*/
+		//Tamanho da resposta pro navegador
 		response.setContentLength(pdf.length);
 		
-		/*Definir na resposta o tipo de arquivo*/
+		//Definir na resposta o tipo de arquivo
 		response.setContentType("application/octet-stream");
 		
-		/*Definir o cabecalho da resposta*/
+		//Definir o cabecalho da resposta
 		String headKey = "Content-Disposition";
 		String headerValue = String.format("attachment; filename=\"%s\"", "relatorio.pdf");
 		
 		response.setHeader(headKey, headerValue);
 		
-		/*Finaliza a resposta*/
+		//Finaliza a resposta
 		response.getOutputStream().write(pdf);
-		
-	}
+	} 
+		 */
 	
 	@GetMapping("telefones/{idpessoa}")
 	public ModelAndView telefones(@PathVariable("idpessoa") Long idpessoa) {
@@ -316,7 +303,7 @@ public class PessoaController {
 	@GetMapping("**/baixarcurriculo/{idpessoa}")
 	public void baixarcurriculo(@PathVariable("idpessoa") Long idpessoa, HttpServletResponse response) throws IOException {
 		
-		/* Consultar o objeto pessoa no banco de dados*/
+		//Consultar o objeto pessoa no banco de dados*/
 		Pessoa pessoa = pessoaRepository.findById(idpessoa).get();
 		if (pessoa.getCurriculo() != null) {
 			
@@ -331,7 +318,7 @@ public class PessoaController {
 			String headerValue = String.format("attachment;filename=\"%s\"", pessoa.getNomeFileCurriculo());
 			response.setHeader(headerKey, headerValue);
 			
-			/* Finaliza a resposta pssando o arquivo*/
+			//Finaliza a resposta pssando o arquivo*/
 			response.getOutputStream().write(pessoa.getCurriculo());
 		} else {
 			// page set a response 

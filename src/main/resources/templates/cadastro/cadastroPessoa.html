@@ -163,16 +163,16 @@
 	<fieldset>
 		<legend>Search Users</legend>
 		<div class="row">
-			<form action="pesquisarpessoa" method="post" class="col s12" id="pesquisarpessoa">
+			<form action="pesquisarPessoa" method="post" class="col s12" id="pesquisarPessoa">
 				<div class="row">
 					<div class="input-field col s6">
-						<label for="nomepesquisa" class="active">By Name</label>
-						<input name="nomepesquisa" id="nomepesquisa" class="validate" th:value="${nomepesquisa}">
+						<label for="nomePesquisa" class="active">By Name</label>
+						<input name="nomePesquisa" id="nomePesquisa" class="validate" th:value="${nomePesquisa}">
 					</div>
 
 					<div class="input-field col s6">
-						<label for="pesqsexo" class="active">By Gender</label>
-						<select class="browser-default" name="pesqsexo" id="pesqsexo">
+						<label for="sexoPesquisa" class="active">By Gender</label>
+						<select class="browser-default" name="sexoPesquisa" id="sexoPesquisa">
 							<option value="">--[Both]--</option>
 							<option value="MASCULINO" th:text="Masculin" />
 							<option value="FEMININO" th:text="Feminin" />
@@ -181,7 +181,7 @@
 					</div>
 					<div class="input-field col s12">
 						<input class="waves-effect waves-light btn" type="submit" value="PDF"
-							onclick="document.getElementById('pesquisarpessoa').method = 'get'" />
+							onclick="document.getElementById('pesquisarPessoa').method = 'get'" />
 						<input class="waves-effect waves-light btn" type="submit" value="Search"/>
 						<a class="waves-effect waves-light btn" th:href="@{/listaPessoas}">List Users</a>
 					</div>
@@ -198,6 +198,7 @@
 				<th>ID</th>
 				<th>Name</th>
 				<th>Surname</th>
+				<th>Gender</th>				
 				<th>Curriculum</th>
 				<th>Edit</th>
 				<th>Delete</th>
@@ -210,6 +211,7 @@
 				</a>
 			</td>
 			<td th:text="${pessoa.sobrenome}"></td>
+			<td th:text="${pessoa.sexopessoa}"></td>
 			<td>
 				<a th:if="${pessoa.curriculo != null}" th:href="@{/baixarcurriculo/{idpessoa}(idpessoa=${pessoa.id})}"
 					style="color:rgb(0, 0, 255)">Download</a>
@@ -230,16 +232,16 @@
 		<center>
 			<span th:if="${pessoas.hasPrevious()}">
 				<a
-					th:href="@{/pessoaspag(page=${pessoas.number-1}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">Previous</a>
+					th:href="@{/pessoaspag(page=${pessoas.number-1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Previous</a>
 			</span>
 
 			<th:block th:each="i: ${#numbers.sequence(0, pessoas.totalPages - 1)}">
-				<a th:href="@{/pessoaspag(page=${i}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">[[ ${i} + 1 ]]</a>
+				<a th:href="@{/pessoaspag(page=${i}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">[[ ${i} + 1 ]]</a>
 			</th:block>
 
 			<span th:if="${pessoas.hasNext()}">
 				<a
-					th:href="@{/pessoaspag(page=${pessoas.number+1}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">Next</a>
+					th:href="@{/pessoaspag(page=${pessoas.number+1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Next</a>
 			</span>
 		</center>
 	<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a> 
