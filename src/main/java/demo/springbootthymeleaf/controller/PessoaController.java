@@ -45,18 +45,9 @@ public class PessoaController {
 	private TelefoneRepository telefoneRepository;
 	
 	@Autowired
-	private ReportUtil reportUtil;
-	
-	@Autowired
 	private ProfissaoRepository profissaoRepository;
 	
-	/*
-	// old method
-	@RequestMapping(method = RequestMethod.GET, value = "/cadastroPessoa")
-	public String inicio() {
-		return "cadastro/cadastroPessoa";
-	}
-	*/
+
 	@RequestMapping(method = RequestMethod.GET, value = "/cadastroPessoa")
 	public ModelAndView inicio() {
 		ModelAndView modelAndView = new ModelAndView("cadastro/cadastroPessoa");
@@ -201,91 +192,6 @@ public class PessoaController {
 		modelAndView.addObject("sexoPesquisa", sexoPesquisa);
 		return modelAndView;
 	}
-	
-	//@GetMapping("**/pesquisarpessoa")
-	/*
-	public void imprimePdf(@RequestParam("nomepesquisa") String nomepesquisa,
-								  @RequestParam("pesqsexo") String pesqsexo,
-								  HttpServletRequest request,
-								  HttpServletResponse response) throws Exception {
-		List<Pessoa> pessoas = new ArrayList<Pessoa>();
-		
-		if (pesqsexo != null && !pesqsexo.isEmpty()  				//Busca por nome e sexo
-				&& nomepesquisa!= null && !nomepesquisa.isEmpty()) {
-			pessoas = pessoaRepository.findPessoaByNameSexo(nomepesquisa, pesqsexo);
-			
-		} else if (nomepesquisa!= null  && !nomepesquisa.isEmpty()) { //Busca por sexo
-			pessoas = pessoaRepository.findPessoaByName(nomepesquisa);
-			
-		} else if (pesqsexo!=null && !pesqsexo.isEmpty()) {      	//Busca por sexo
-			pessoas = pessoaRepository.findPessoaBySexo(pesqsexo);
-		
-		} else {   													//Busca por todos
-			Iterable<Pessoa> iterator = pessoaRepository.findAll();
-			for (Pessoa pessoa : iterator) {
-				pessoas.add(pessoa);
-			}
-		}
-		
-		//Chama o servico que faz a geracao de relatorio
-		byte[] pdf = reportUtil.gerarRelatorio(pessoas, "pessoa", request.getServletContext());
-		
-		//Tamanho da resposta pro navegador
-		response.setContentLength(pdf.length);
-		
-		//Definir na resposta o tipo de arquivo
-		response.setContentType("application/octet-stream");
-		
-		//Definir o cabecalho da resposta
-		String headKey = "Content-Disposition";
-		String headerValue = String.format("attachment; filename=\"%s\"", "relatorio.pdf");
-		
-		response.setHeader(headKey, headerValue);
-		
-		//Finaliza a resposta
-		response.getOutputStream().write(pdf);
-	} 
-		 */
-	
-	
-	@GetMapping("**/pesquisarPessoa")
-	public void imprimePDF(
-			@RequestParam("nomePesquisa") String nomePesquisa,
-			@RequestParam("sexoPesquisa") String sexoPesquisa,
-			HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-		
-		List<Pessoa> pessoas = new ArrayList<>();
-		
-		if (sexoPesquisa != null && !sexoPesquisa.isEmpty()
-				&& nomePesquisa != null && !nomePesquisa.isEmpty()) {			
-			pessoas = pessoaRepository.findByNameSexo(nomePesquisa, sexoPesquisa);			
-		} else if (nomePesquisa != null && !nomePesquisa.isEmpty()) {
-			pessoas = pessoaRepository.findByName(nomePesquisa);
-		} else if (sexoPesquisa != null && !sexoPesquisa.isEmpty()) {
-			pessoas = pessoaRepository.findBySexo(sexoPesquisa);
-		} else {
-			pessoas = pessoaRepository.findAll();
-		}
-		
-		// Chama serviço que faz a geração do relatório
-		byte[] pdf = reportUtil.gerarRelatorio(pessoas, "pessoa", request.getServletContext());
-		
-		// Tamanho da resposta
-		response.setContentLength(pdf.length);
-		
-		// Definir na resposta o tipo de arquivo
-		response.setContentType("application/octet-stream");
-		
-		// Define o cabeçalho da resposta
-		String headerKey = "Content-Disposition";		
-		String headerValue = String.format("attachment; filename=\"%s\"", "relatorio.pdf");
-		response.setHeader(headerKey, headerValue);
-		
-		// finaliza a resposta para o navegador
-		response.getOutputStream().write(pdf);		
-	}
-	
 	
 	
 	@GetMapping("telefones/{idpessoa}")
