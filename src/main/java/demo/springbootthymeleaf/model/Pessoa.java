@@ -31,15 +31,15 @@ public class Pessoa implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@NotNull(message = "Nome não pode ser nulo")
-	@NotEmpty(message = "Nome não pode ser vazio")
+	@NotNull(message = "Name is required")
+	@NotEmpty(message = "Name is required")
 	private String nome;
 
-	@NotNull(message = "Sobrenome não pode ser nulo")
-	@NotEmpty(message = "Sobrenome não pode ser vazio")
+	@NotNull(message = "Surname is required")
+	@NotEmpty(message = "Surname is required")
 	private String sobrenome;
 
-	@Min(value = 18, message = "Idade inválida")
+	@Min(value = 18, message = "Invalid age. Mininum age is 18.")
 	private int idade;
 	
 	@ManyToOne
