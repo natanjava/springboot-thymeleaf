@@ -51,7 +51,7 @@ public class PessoaController {
 	private ProfissaoRepository profissaoRepository;
 	
 	/*
-	// metodo inicio() antigo
+	// old method
 	@RequestMapping(method = RequestMethod.GET, value = "/cadastroPessoa")
 	public String inicio() {
 		return "cadastro/cadastroPessoa";
@@ -90,7 +90,8 @@ public class PessoaController {
 					consumes = {"multipart/form-data"})
 	public ModelAndView salvar(@Valid Pessoa pessoa, BindingResult bindingResult, final MultipartFile file) throws IOException {
 		
-		// novas linhas pra corrigir erro, aula 31
+		// @Valid to activate the validations and BindingResult to get the results of that
+		// always when it saves or edit a register, it´s necessary to load and set again the Phone List to avoid problems
 		pessoa.setTelefones(telefoneRepository.getTelefones(pessoa.getId()));
 				
 		
@@ -104,6 +105,7 @@ public class PessoaController {
 			modelAndView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0, 5, Sort.by("nome"))));
 			modelAndView.addObject("pessoaobj", pessoa);
 			modelAndView.addObject("profissoes", profissaoRepository.findAll());
+			
 			List<String> msg = new ArrayList<String>();
 			for (ObjectError objectError : bindingResult.getAllErrors()) {
 				msg.add(objectError.getDefaultMessage()); // vem das @notações dos campos da classe model
@@ -176,7 +178,7 @@ public class PessoaController {
 		return modelAndView;
 	}
 	
-	// PosMapping  e RequestMapping sao equivalentes
+	// PosMapping  and RequestMapping are equivalent
 	@PostMapping("**/pesquisarpessoa")
 	public ModelAndView pesquisar(
 			@RequestParam("nomepesquisa") String nomepesquisa, 
@@ -185,13 +187,16 @@ public class PessoaController {
 		
 		Page<Pessoa> pessoas = null;
 		
+		/*
 		if (pesqsexo != null && !pesqsexo.isEmpty()) {
 			pessoas = pessoaRepository.findPessoaBySexoNamePage(nomepesquisa, pesqsexo, pageable);
 		}else {
 			pessoas = pessoaRepository.findPessoaByNamePage(nomepesquisa, pageable);
 		}
+		 */
 		
 		/*
+		 */
 		if (pesqsexo != null && !pesqsexo.isEmpty() 
 				&& nomepesquisa != null && !nomepesquisa.isEmpty()) {
 			pessoas = pessoaRepository.findPessoaBySexoNamePage(nomepesquisa, pesqsexo, pageable);
@@ -200,7 +205,6 @@ public class PessoaController {
 		} else if (pesqsexo != null && !pesqsexo.isEmpty()) {
 			pessoas = pessoaRepository.findPessoaBySexoPage(pesqsexo, pageable);
 		}
-		*/
 	
 		ModelAndView modelAndView = new ModelAndView("cadastro/cadastroPessoa");
 		modelAndView.addObject("pessoas", pessoas);
@@ -330,7 +334,7 @@ public class PessoaController {
 			/* Finaliza a resposta pssando o arquivo*/
 			response.getOutputStream().write(pessoa.getCurriculo());
 		} else {
-			// pagina trata 
+			// page set a response 
 		}
 	}
 	

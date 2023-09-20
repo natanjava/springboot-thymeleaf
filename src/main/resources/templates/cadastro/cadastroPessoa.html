@@ -18,7 +18,7 @@
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-	<!-- Adicionando JQuery -->
+	<!--  JQuery -->
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
 		integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
 
@@ -39,104 +39,104 @@
 
 </head>
 
-<body>
-	<h3>Spring Boot + Thymeleaf + Material Design Lite</h3>
+<body style="margin-left: 3%; margin-right: 3%">
+	<h4>Spring Boot + Thymeleaf + Material Design Lite</h4>
 	<br />
 
 	<fieldset>
-		<legend>Cadastro de Pessoa</legend>
+		<legend>User Registration</legend>
 		<div th:each="m : ${msg}">
 			<span th:text="${m}"></span>
 		</div>
 
 		<div class="row">
-			<form action="salvarPessoa" method="post" th:object="${pessoaobj}" class="col_s12" id="formpessoa"
-				enctype="multipart/form-data">
+			<form action="salvarPessoa" method="post" th:object="${pessoaobj}" class="col_s12" id="formpessoa" enctype="multipart/form-data">
 				<div class="row">
 					<div class="input-field col s6">
 						<label for="id" class="active">ID</label>
 						<input name="id" th:field="*{id}" readonly="readyonly" id="id" class="validate" />
 					</div>
 					<div class="input-field col s6">
-						<label for="nome" class="active">Nome</label>
+						<label for="nome" class="active">Name</label>
 						<input name="nome" placeholder="Digite o nome" th:field="*{nome}" id="nome" class="validate" />
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="input-field col s4">
-						<label for="sobrenome" class="active">Sobrenome</label>
+						<label for="sobrenome" class="active">Surname</label>
 						<input name="sobrenome" th:field="*{sobrenome}" id="sobrenome" class="validate" />
 					</div>
 					<div class="input-field col s4">
-						<label for="dataNascimento" class="active">Data Nascimento:</label>
+						<label for="dataNascimento" class="active">Date of birth</label>
 						<input type="date" id="dataNascimento" th:field="*{dataNascimento}" name="dataNascimento"
 							placeholder="Data Nasc." onchange="calculateAge()" />
 					</div>
 					<div class="input-field col s4">
-						<label for="idade" class="active">Idade</label>
+						<label for="idade" class="active">Age</label>
 						<input name="idade" th:field="*{idade}" id="idade" class="validate" readonly="readyonly" />
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="input-field col s4">
-						<label for="sexopessoa" class="active">Sexo</label>
+						<label for="sexopessoa" class="active">Gender</label>
 						<select class="browser-default" th:field="*{sexopessoa}" id="sexopessoa">
-							<option value="" disabled selected>--[Selecione]--</option>
-							<option value="MASCULINO" th:text="Masculino" />
-							<option value="FEMININO" th:text="Feminino" />
+							<option value="" disabled selected>--[Choose]--</option>
+							<option value="MASCULINO" th:text="Masculin" />
+							<option value="FEMININO" th:text="Feminin" />
 						</select>
 					</div>
 
 					<div class="input-field col s4">
-						<label for="profissao" class="active">Profissão</label>
+						<label for="profissao" class="active">Occupation</label>
 						<select class="browser-default" th:field="*{profissao}" id="profissao">
 							<option th:each="p : ${profissoes}" th:value="${p.id}" th:text="${p.nome}" />
 						</select>
 					</div>
 
 					<div class="input-field col s4">
-						<label for="cargo" class="active">Cargo</label>
+						<label for="cargo" class="active">Level</label>
 						<select class="browser-default" th:field="*{cargo}" id="cargo">
 							<option th:each="c : ${T(demo.springbootthymeleaf.model.Cargo).values()}" th:value="${c}"
 								th:text="${c.nome}" />
 						</select>
 					</div>
 				</div>
-
+				
+				<!-- <div class="row" sec:authorize="hasAnyRole('ROLE_GERENTE', 'ROLE_USER')">   <!-- not implemented -->
 				<div class="row">
 					<div class="input-field col s12">
-						<label for="file" class="active">Currículo:</label>
+						<label for="file" class="active">Curriculum</label>
 						<input type="file" id="file" name="file" class="file-field input-field">
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="input-field col s4">
-						<label for="cep" class="active">Cep</label>
+						<label for="cep" class="active">Zip Code</label>
 						<input name="cep" th:field="*{cep}" id="cep" class="validate">
 					</div>
 
 					<div class="input-field col s4">
-						<label for="rua" class="active">Rua</label>
+						<label for="rua" class="active">Street</label>
 						<input name="rua" th:field="*{rua}" id="rua" class="validate">
 					</div>
 
 					<div class="input-field col s4">
-						<label for="bairro" class="active">Bairro</label>
+						<label for="bairro" class="active">Neighborhood</label>
 						<input name="bairro" th:field="*{bairro}" id="bairro" class="validate">
 					</div>
 				</div>
 
 				<div class="row">
 					<div class="input-field col s4">
-						<label for="cidade" class="active">Cidade</label>
+						<label for="cidade" class="active">City</label>
 						<input name="cidade" th:field="*{cidade}" id="cidade" class="validate">
 					</div>
 
 					<div class="input-field col s4">
-						<label for="uf" class="active">UF</label>
+						<label for="uf" class="active">State</label>
 						<input name="uf" th:field="*{uf}" id="uf" class="validate">
 					</div>
 
@@ -146,13 +146,14 @@
 					</div>
 				</div>
 
-				<!--      BOTÕES     -->
+				<!--      BUTTONS: save , clean     -->
 				<div class="row">
 					<input class="input-field col s12">
 						<button class="waves-effect waves-light btn" type="submit"> Save </button>
 						<buton type="button" class="waves-effect waves-light btn" onclick="limparForm();"> Clean Form</input>
 					</div>
 				</div>
+				
 			</form>
 		</div>
 	</fieldset>
@@ -160,29 +161,29 @@
 	<br /><br /><br />
 
 	<fieldset>
-		<legend>Campos de pesquisa</legend>
+		<legend>Search Users</legend>
 		<div class="row">
 			<form action="pesquisarpessoa" method="post" class="col s12" id="pesquisarpessoa">
 				<div class="row">
 					<div class="input-field col s6">
-						<label for="nomepesquisa" class="active">Pesquisa por nome:</label>
+						<label for="nomepesquisa" class="active">By Name</label>
 						<input name="nomepesquisa" id="nomepesquisa" class="validate" th:value="${nomepesquisa}">
 					</div>
 
 					<div class="input-field col s6">
-						<label for="pesqsexo" class="active">Pesquisa Sexo</label>
+						<label for="pesqsexo" class="active">By Gender</label>
 						<select class="browser-default" name="pesqsexo" id="pesqsexo">
-							<option value="">--[Ambos os Sexos]--</option>
-							<option value="MASCULINO" th:text="Masculino" />
-							<option value="FEMININO" th:text="Feminino" />
+							<option value="">--[Both]--</option>
+							<option value="MASCULINO" th:text="Masculin" />
+							<option value="FEMININO" th:text="Feminin" />
 						</select>
 
 					</div>
 					<div class="input-field col s12">
 						<input class="waves-effect waves-light btn" type="submit" value="PDF"
 							onclick="document.getElementById('pesquisarpessoa').method = 'get'" />
-						<input class="waves-effect waves-light btn" type="submit" value="Buscar"/>
-						<a class="waves-effect waves-light btn" th:href="@{/listaPessoas}">Lista de pessoas</a>
+						<input class="waves-effect waves-light btn" type="submit" value="Search"/>
+						<a class="waves-effect waves-light btn" th:href="@{/listaPessoas}">List Users</a>
 					</div>
 				</div>
 			</form>
@@ -195,11 +196,11 @@
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>Nome</th>
-				<th>Sobrenome</th>
-				<th>Curriculo</th>
-				<th>Editar</th>
-				<th>Excluir</th>
+				<th>Name</th>
+				<th>Surname</th>
+				<th>Curriculum</th>
+				<th>Edit</th>
+				<th>Delete</th>
 			</tr>
 		</thead>
 		<tr th:each="pessoa : ${pessoas.content}">
@@ -212,23 +213,24 @@
 			<td>
 				<a th:if="${pessoa.curriculo != null}" th:href="@{/baixarcurriculo/{idpessoa}(idpessoa=${pessoa.id})}"
 					style="color:rgb(0, 0, 255)">Download</a>
-				<a th:if="${pessoa.curriculo == null}" style="color:rgb(255, 0, 0)">Não existe</a>
+				<a th:if="${pessoa.curriculo == null}" style="color:rgb(255, 0, 0)">No File</a>
 			</td>
 			<td>
-				<a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}" style="color:rgb(0, 0, 255)">Editar</a>
+				<a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}" style="color:rgb(0, 0, 255)">Edit</a>
 			</td>
 			<td>
 				<a th:href="@{/removerpessoa/{idpessoa}(idpessoa=${pessoa.id})}"
-					style="color:rgb(255, 0, 0)">Excluir</a>
+					style="color:rgb(255, 0, 0)">Delete</a>
 			</td>
 		</tr>
 	</table>
 
+	<!-- Pagination -->
 	<div class="row" style="margin-top: 30px;">
 		<center>
 			<span th:if="${pessoas.hasPrevious()}">
 				<a
-					th:href="@{/pessoaspag(page=${pessoas.number-1}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">Anterior</a>
+					th:href="@{/pessoaspag(page=${pessoas.number-1}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">Previous</a>
 			</span>
 
 			<th:block th:each="i: ${#numbers.sequence(0, pessoas.totalPages - 1)}">
@@ -237,10 +239,10 @@
 
 			<span th:if="${pessoas.hasNext()}">
 				<a
-					th:href="@{/pessoaspag(page=${pessoas.number+1}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">Próximo</a>
+					th:href="@{/pessoaspag(page=${pessoas.number+1}, size=${pessoas.size}, nomepesquisa=${nomepesquisa})}">Next</a>
 			</span>
 		</center>
-	<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a>
+	<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a> 
 	</div>
 	<br>
 
@@ -256,7 +258,8 @@
 		$(document).ready(function () { ... } ); Quando a tela inicia os scripts são lidos automaticamente
 	-->
 	<script type="text/javascript">
-		
+	
+	// clean Form for new User Registration	
 	function limparForm() {
 			var elementos = document.getElementById("formpessoa").elements; /*Retorna os elementos html dentro do form*/
 				
@@ -274,7 +277,7 @@
 			
 		}
 
-		//  transforma campo de data em calendario 
+		//  transform dataField into Calendar 
 		/*
 		$('#dataNascimento').datepicker({
 					showOthermonths:true,

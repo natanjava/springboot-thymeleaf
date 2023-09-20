@@ -9,8 +9,8 @@ public enum Cargo {
 	*/
 	
 	/* implementação nova, mais elaborada */
-	JUNIOR ("Júnior"),
-	PLENO ("Pleno"),
+	JUNIOR ("Junior"),
+	PLENO ("Full"),
 	SENIOR ("Senior");
 	
 	private String nome;
