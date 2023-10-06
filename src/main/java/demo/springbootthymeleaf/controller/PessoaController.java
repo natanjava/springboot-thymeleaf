@@ -5,10 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,17 +59,85 @@ public class PessoaController {
 	
 	@GetMapping("/pessoaspag")
 	public ModelAndView carregarPessoasPorPaginacao(
-			@PageableDefault(size = 5) Pageable pageable,
-			ModelAndView model, @RequestParam("nomePesquisa") String nomPesquisa) {
-		
-		Page<Pessoa> pagePessoa = pessoaRepository.findByNamePage(nomPesquisa, pageable);
-		model.addObject("pessoas", pagePessoa);
-		model.addObject("pessoaobj", new Pessoa());
-		model.addObject("nomePesquisa", nomPesquisa);
-		model.setViewName("cadastro/cadastroPessoa");
-		
-		return model;		
+		@PageableDefault(size = 5) Pageable pageable,
+		ModelAndView model, 
+		@RequestParam(value = "nomePesquisa", required = false) String nomePesquisa,
+		@RequestParam(value = "sexoPesquisa", required = false) String sexoPesquisa) {
+
+		Page<Pessoa> pagePessoa = null;
+
+		if (nomePesquisa != null && !nomePesquisa.isEmpty() && sexoPesquisa != null && !sexoPesquisa.isEmpty() ) {
+			pagePessoa = pessoaRepository.findByNameSexoPage(nomePesquisa, sexoPesquisa, pageable); }
+		else if (nomePesquisa != null && !nomePesquisa.isEmpty()) {
+	        pagePessoa = pessoaRepository.findByNamePage(nomePesquisa, pageable);
+	    } else if (sexoPesquisa != null && !sexoPesquisa.isEmpty()) {
+	    	pagePessoa = pessoaRepository.findBySexoPage(sexoPesquisa, pageable);
+	    } else   {
+	    	pagePessoa = pessoaRepository.findAll(pageable);
+	    }
+
+	    model.addObject("pessoas", pagePessoa);
+	    model.addObject("pessoaobj", new Pessoa());
+	    model.addObject("nomePesquisa", nomePesquisa);
+	    model.addObject("sexoPesquisa", sexoPesquisa);
+	    model.setViewName("cadastro/cadastroPessoa");
+	    model.addObject("profissoes", profissaoRepository.findAll());
+
+	    return model;
 	}
+	
+	@PostMapping("**/pesquisarPessoa")
+	public ModelAndView pesquisar(
+			@RequestParam(value = "nomePesquisa", required = false) String nomePesquisa,
+		    @RequestParam(value = "sexoPesquisa", required = false) String sexoPesquisa,
+			@PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
+		
+		Page<Pessoa> pessoas = null;
+		
+		if (nomePesquisa != null && !nomePesquisa.isEmpty() && sexoPesquisa != null && !sexoPesquisa.isEmpty()) {
+			pessoas = pessoaRepository.findByNameSexoPage(nomePesquisa, sexoPesquisa, pageable);
+		} else if (nomePesquisa != null && !nomePesquisa.isEmpty()) {
+			pessoas = pessoaRepository.findByNamePage(nomePesquisa, pageable);
+		} else if (sexoPesquisa != null && !sexoPesquisa.isEmpty()) {
+			pessoas = pessoaRepository.findBySexoPage(sexoPesquisa, pageable);
+		}
+		
+		ModelAndView modelAndView = new ModelAndView("cadastro/cadastroPessoa");
+		modelAndView.addObject("pessoas", pessoas);
+		modelAndView.addObject("pessoaobj", new Pessoa());
+		modelAndView.addObject("nomePesquisa", nomePesquisa);
+		modelAndView.addObject("sexoPesquisa", sexoPesquisa);
+		modelAndView.addObject("profissoes", profissaoRepository.findAll());
+		
+		return modelAndView;
+	}
+	
+
+	/*
+	@RequestMapping(method = RequestMethod.GET, value = "/listaPessoas")
+	public ModelAndView listar() {
+		
+		ModelAndView modelAndView = new ModelAndView("cadastro/cadastroPessoa");
+		Iterable<Pessoa> pessoasIt = pessoaRepository.findAll();
+		//modelAndView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0, 5, Sort.by("nome"))));
+		modelAndView.addObject("pessoas", pessoasIt);
+		modelAndView.addObject("pessoaobj", new Pessoa());
+		return modelAndView;
+	}
+	 * */
+	@RequestMapping(method = RequestMethod.GET, value = "/listaPessoas")
+	public ModelAndView listar(@PageableDefault(size = 5, sort = "nome") Pageable pageable) {
+	    Page<Pessoa> pessoasPage = pessoaRepository.findAll(pageable);
+
+	    ModelAndView modelAndView = new ModelAndView("cadastro/cadastroPessoa");
+	    modelAndView.addObject("pessoas", pessoasPage);
+	    modelAndView.addObject("pessoaobj", new Pessoa());
+		modelAndView.addObject("profissoes", profissaoRepository.findAll());
+	    return modelAndView;
+	}
+
+
+	
 	
 
 	@RequestMapping(method = RequestMethod.POST, 
@@ -133,14 +198,7 @@ public class PessoaController {
 		// return "cadastro/cadastroPessoa";
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/listaPessoas")
-	public ModelAndView listar() {
-		ModelAndView modelAndView = new ModelAndView("cadastro/cadastroPessoa");
-		//Iterable<Pessoa> pessoasIt = pessoaRepository.findAll();
-		modelAndView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0, 5, Sort.by("nome"))));
-		modelAndView.addObject("pessoaobj", new Pessoa());
-		return modelAndView;
-	}
+
 
 	// @RequestMapping aqui podria usar o RequestMappin mas melhor usar notacao nova
 	// do Spring
@@ -164,34 +222,11 @@ public class PessoaController {
 		ModelAndView modelAndView = new ModelAndView("cadastro/cadastroPessoa");
 		modelAndView.addObject("pessoas", pessoaRepository.findAll(PageRequest.of(0, 5, Sort.by("nome")))); // rerona lista atualizada
 		modelAndView.addObject("pessoaobj", new Pessoa());
+		modelAndView.addObject("profissoes", profissaoRepository.findAll());
 
 		return modelAndView;
 	}
 	
-	@PostMapping("**/pesquisarPessoa")
-	public ModelAndView pesquisar(
-			@RequestParam("nomePesquisa") String nomePesquisa,
-			@RequestParam("sexoPesquisa") String sexoPesquisa,
-			@PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
-		
-		Page<Pessoa> pessoas = null;
-		
-		if (sexoPesquisa != null && !sexoPesquisa.isEmpty() 
-				&& nomePesquisa != null && !nomePesquisa.isEmpty()) {
-			pessoas = pessoaRepository.findByNameSexoPage(nomePesquisa, sexoPesquisa, pageable);
-		} else if (nomePesquisa != null && !nomePesquisa.isEmpty()) {
-			pessoas = pessoaRepository.findByNamePage(nomePesquisa, pageable);
-		} else if (sexoPesquisa != null && !sexoPesquisa.isEmpty()) {
-			pessoas = pessoaRepository.findBySexoPage(sexoPesquisa, pageable);
-		}
-		
-		ModelAndView modelAndView = new ModelAndView("cadastro/cadastroPessoa");
-		modelAndView.addObject("pessoas", pessoas);
-		modelAndView.addObject("pessoaobj", new Pessoa());
-		modelAndView.addObject("nomePesquisa", nomePesquisa);
-		modelAndView.addObject("sexoPesquisa", sexoPesquisa);
-		return modelAndView;
-	}
 	
 	
 	@GetMapping("telefones/{idpessoa}")

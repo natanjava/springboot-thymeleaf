@@ -45,7 +45,7 @@
 			<span th:text="${m}"></span>
 		</div>
 
-		<div class="row">
+		<div class="row" id="myForm">
 			<form action="salvarPessoa" method="post" th:object="${pessoaobj}" class="col_s12" id="formpessoa" enctype="multipart/form-data">
 				<div class="row">
 					<div class="input-field col s6">
@@ -144,6 +144,7 @@
 					<div class="input-field col s12">
 						<input class="waves-effect waves-light btn" type="submit" value="Search" onclick="return validateFields();"/>
 						<a class="waves-effect waves-light btn" th:href="@{/listaPessoas}">List Users</a>
+						
 					</div>
 				</div>
 			</form>
@@ -151,8 +152,9 @@
 	</fieldset>
 
 	<br /><br />
-
-	<table class="striped">
+	
+	<!-- List to display usersn-->
+	<table class="striped" th:if="${pessoas != null and not #lists.isEmpty(pessoas.content)}" id="myTable">
 		<thead>
 			<tr>
 				<th>ID</th>
@@ -164,48 +166,55 @@
 				<th>Delete</th>
 			</tr>
 		</thead>
-		<tr th:each="pessoa : ${pessoas.content}">
-			<td th:text="${pessoa.id}"></td>
-			<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}">
-					<span th:text="${pessoa.nome}" style="color:rgb(0, 0, 255)"></span>
-				</a>
-			</td>
-			<td th:text="${pessoa.sobrenome}"></td>
-			<td th:text="${pessoa.sexopessoa}"></td>
-			<td>
-				<a th:if="${pessoa.curriculo != null}" th:href="@{/baixarcurriculo/{idpessoa}(idpessoa=${pessoa.id})}"
-					style="color:rgb(0, 0, 255)">Download</a>
-				<a th:if="${pessoa.curriculo == null}" style="color:rgb(255, 0, 0)">No File</a>
-			</td>
-			<td>
-				<a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}" style="color:rgb(0, 0, 255)">Edit</a>
-			</td>
-			<td>
-				<a th:href="@{/removerpessoa/{idpessoa}(idpessoa=${pessoa.id})}"
-					style="color:rgb(255, 0, 0)">Delete</a>
-			</td>
-		</tr>
+		<tbody>
+			<tr th:each="pessoa : ${pessoas.content}">
+				<td th:text="${pessoa.id}"></td>
+				<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}">
+						<span th:text="${pessoa.nome}" style="color:rgb(0, 0, 255)"></span>
+					</a>
+				</td>
+				<td th:text="${pessoa.sobrenome}"></td>
+				<td th:text="${pessoa.sexopessoa}"></td>
+				<td>
+					<a th:if="${pessoa.curriculo != null}" th:href="@{/baixarcurriculo/{idpessoa}(idpessoa=${pessoa.id})}"
+						style="color:rgb(0, 0, 255)">Download</a>
+					<a th:if="${pessoa.curriculo == null}" style="color:rgb(255, 0, 0)">No File</a>
+				</td>
+				<td>
+					<a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}" style="color:rgb(0, 0, 255)" >Edit</a>
+				</td>
+				<td>
+					<a th:href="@{/removerpessoa/{idpessoa}(idpessoa=${pessoa.id})}"
+						style="color:rgb(255, 0, 0)">Delete</a>
+				</td>
+			</tr>
+		</tbody>
 	</table>
 
-	<!-- Pagination -->
-	<div class="row" style="margin-top: 30px;">		
+	<!-- Links for Pagination under the List -->
+	<div class="row" style="margin-top: 30px;" th:if="${pessoas != null and not #lists.isEmpty(pessoas.content)}" >		
 		<center>				
-			<span th:if="${pessoas.hasPrevious()}">
-				<a th:href="@{/pessoaspag(page=${pessoas.number - 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Anterior</a>
+			<span th:if="${pessoas != null and pessoas.hasPrevious()}">
+				<a th:href="@{/pessoaspag(page=${pessoas.number - 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa}, sexoPesquisa=${sexoPesquisa})}" >Previous</a>
 			</span>
 		
 			<th:block th:each="i: ${#numbers.sequence(0, pessoas.totalPages -1)}">
-				<a th:href="@{/pessoaspag(page=${i}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">[[ ${i} + 1 ]]</a>
+				<a th:href="@{/pessoaspag(page=${i}, size=${pessoas.size}, nomePesquisa=${nomePesquisa}, sexoPesquisa=${sexoPesquisa})}" >[[ ${i} + 1 ]]</a>
 			</th:block>
 				
 			<span th:if="${pessoas.hasNext()}">
-				<a th:href="@{/pessoaspag(page=${pessoas.number + 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Próximo</a>
+				<a th:href="@{/pessoaspag(page=${pessoas.number + 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa}, sexoPesquisa=${sexoPesquisa})}" >Next</a>
 			</span>
 		</center>
-		<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a>
-		<a class="waves-effect waves-light btn" th:href="@{/infoPage}">More Infos</a>
 	</div>
-	<br>
+	<div th:if="${pessoas == null or #lists.isEmpty(pessoas.content)}">
+	    <p>No result found.</p>
+	</div>
+
+	
+	<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a>
+	<a class="waves-effect waves-light btn" th:href="@{/infoPage}">More Infos</a>
+	<br><br><br>
 
 
 
@@ -259,6 +268,12 @@
 		
 		    return true; // Permite o envio do formulário se pelo menos um campo estiver preenchido
 		}
+		
+
+    	
+
+		
+
 
 
 	</script>
