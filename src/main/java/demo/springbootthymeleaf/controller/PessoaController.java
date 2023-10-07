@@ -232,7 +232,7 @@ public class PessoaController {
 	@GetMapping("telefones/{idpessoa}")
 	public ModelAndView telefones(@PathVariable("idpessoa") Long idpessoa) {
 		Optional<Pessoa> pessoa = pessoaRepository.findById(idpessoa);
-
+		
 		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
 		modelAndView.addObject("pessoaobj", pessoa.get());
 		modelAndView.addObject("telefones", telefoneRepository.getTelefones(idpessoa));
@@ -243,6 +243,8 @@ public class PessoaController {
 	@PostMapping("**/addfonePessoa/{pessoaid}")
 	public ModelAndView addFonePessoa(Telefone telefone, @PathVariable("pessoaid") Long pessoaid) {
 		Pessoa pessoa = pessoaRepository.findById(pessoaid).get();
+		
+			
 		
 		if(telefone != null && (telefone.getNumero() != null && telefone.getNumero().isEmpty())
 				|| telefone.getNumero() == null)  {
@@ -256,11 +258,16 @@ public class PessoaController {
 			return modelAndView;
 		}
 		
-		
-		
 		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
-		telefone.setPessoa(pessoa);
-		telefoneRepository.save(telefone); 
+		
+		if (telefoneRepository.getTelefones(pessoaid).size() < 3) {
+			telefone.setPessoa(pessoa);
+			telefoneRepository.save(telefone); 
+		} else {
+			String msg = "Maximum number of telephones per Person: 3";
+			modelAndView.addObject("msg",msg);
+		}
+		
 		
 		modelAndView.addObject("pessoaobj", pessoa); // isso faz manter os dados da pessoa na tela
 		modelAndView.addObject("telefones", telefoneRepository.getTelefones(pessoaid));
@@ -278,7 +285,8 @@ public class PessoaController {
 		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
 		modelAndView.addObject("pessoaobj", pessoa);
 		modelAndView.addObject("telefones", telefoneRepository.getTelefones(pessoa.getId())); // rerona lista atualizada
-
+		String msg = "Phone removed sucessfully!";
+		modelAndView.addObject("msg", msg);
 		return modelAndView;
 	}
 	
