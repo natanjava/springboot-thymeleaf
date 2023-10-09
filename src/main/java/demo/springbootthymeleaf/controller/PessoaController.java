@@ -242,10 +242,8 @@ public class PessoaController {
 	
 	@PostMapping("**/addfonePessoa/{pessoaid}")
 	public ModelAndView addFonePessoa(Telefone telefone, @PathVariable("pessoaid") Long pessoaid) {
-		Pessoa pessoa = pessoaRepository.findById(pessoaid).get();
-		
-			
-		
+
+		/*
 		if(telefone != null && (telefone.getNumero() != null && telefone.getNumero().isEmpty())
 				|| telefone.getNumero() == null)  {
 			
@@ -253,23 +251,31 @@ public class PessoaController {
 			modelAndView.addObject("pessoaobj", pessoa);
 			modelAndView.addObject("telefones", telefoneRepository.getTelefones(pessoaid));
 			List<String> msg = new ArrayList<String>();
-			msg.add("Numero deve ser informado");
+			msg.add("Number muss be informed.");
 			modelAndView.addObject("msg", msg);
 			return modelAndView;
 		}
+   	    */
 		
+		Pessoa pessoa = pessoaRepository.findById(pessoaid).get();
 		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
 		
 		if (telefoneRepository.getTelefones(pessoaid).size() < 3) {
-			telefone.setPessoa(pessoa);
-			telefoneRepository.save(telefone); 
+			String phone = telefone.getNumero();
+			if (!telefoneRepository.verifyPhone(phone , pessoaid)) {
+				telefone.setPessoa(pessoa);
+				telefoneRepository.save(telefone); 
+			}
+			else {
+				String msg = "Phone already exist at your List.";
+				modelAndView.addObject("msg",msg);
+			}
 		} else {
 			String msg = "Maximum number of telephones per Person: 3";
 			modelAndView.addObject("msg",msg);
 		}
 		
-		
-		modelAndView.addObject("pessoaobj", pessoa); // isso faz manter os dados da pessoa na tela
+		modelAndView.addObject("pessoaobj", pessoa); // this keeps the person's data on the screen
 		modelAndView.addObject("telefones", telefoneRepository.getTelefones(pessoaid));
 		
 		return modelAndView; 
