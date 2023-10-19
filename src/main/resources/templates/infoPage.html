@@ -22,10 +22,29 @@
 	</style>
 </head>
 
-<body style="margin-left: 3%; margin-right: 3%; margin-bottom: 2%; margin-top: 2%;">
-	<h5>General informations about the System</h5><br />
-	building...
-	<br/><br/>
+<body style="margin-left: 8%; margin-right: 14%; margin-bottom: 2%; text-align: justify; ">
+	
+	
+		<br/><br/>
+		<h5>General informations about the System</h5>
+		<p>This <a href="https://github.com/natanjava/springboot-thymeleaf/tree/master-deploy" target="_blank">System</a>  
+			registers users on a form with validations and offers the option to upload a document (curriculum).  
+		Once saved, the user will be added to a list with other users, who have already been saved in the system. 
+		In this list, when you click on the user's name, you will be redirected to the phone number page.
+		Each record can have a maximum of 3 telephone numbers. It is also possible 
+		to download the Curriculum from the list of saved users. In this system there is only one standard user to access the system 
+		and this does not appear in the list of saved users, they are different entities. And users created through the form 
+		do not have a login to access the system. 
+
+		</p>
+		
+		<p><u>Tolls - Technical informations:</u> Spring Tool Suite IDE, Postgres, EC2 Amanzon Tecnology (deploy on cloud Server).       
+		Spring Boot, Spring MVC, Thymeleaf, Material Design, Javascript. </p>
+		
+		<a href="https://github.com/natanjava/springboot-thymeleaf/tree/master-deploy" target="_blank">Git Hub Link</a>
+		
+	
+	<br/><br/><br/>
 	<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a> 
 	<a class="waves-effect waves-light btn" th:href="@{/cadastroPessoa}">User Page</a>
 	

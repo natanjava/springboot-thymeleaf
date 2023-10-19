@@ -16,7 +16,6 @@
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-
 	<style type="text/css">
 
 	</style>
@@ -33,12 +32,12 @@
 			<p><b>Age: </b><span th:text="${p.idade}"></span> </p>
 		</div>
 	</div>
+	<div th:each="m : ${msg}">
+		<span th:text="${m}" style="background-color: black; color: white;"></span>
+	</div>
 	<br/>
 	<h5>Phone(s) List</h5>
 
-	<div th:each="m : ${msg}">
-		<span th:text="${m}"></span>
-	</div>
 
 	<!--pessoaobj ja foi referenciado, so reaproveita pra recuperar o id; 
 			pessoaid vai pro controller, assim como numero e tipo-->
@@ -48,14 +47,18 @@
 			<div class="row">
 				<div class="input-field col s6">
 					<label class="active" for="numero">Number</label>
-					<input id="numero" name="numero" class="validate">
+					<input id="numero" name="numero" class="validate" maxlength="14"  onkeyup="handlePhone(event)" />
 				</div>
 				<div class="input-field col s6">
 					<label class="active" for="tipo">Type</label>
-					<input id="tipo" name="Tipo" class="validate">
+					<select class="browser-default" id="tipo" name="tipo">
+						<option value="PRIVATE PHONE" th:text="Private" selected />
+						<option value="HOME" th:text="Home" />
+						<option value="OTHER" th:text="Other" />
+					</select>
 				</div>
-				<input type="submit" value="Save Phone" class="waves-effect waves-light btn">
 			</div>
+			<input type="submit" value="Save Phone" class="waves-effect waves-light btn" >
 		</form>
 	</div>
 
@@ -84,9 +87,6 @@
 	<br>
 
 
-
-
-
 	<!--JavaScript at end of body for optimized loading-->
 	<script type="text/javascript" src="/materialize/js/materialize.js"></script>
 	<script type="text/javascript" src="/materialize/js/materialize.min.js"></script>
@@ -96,17 +96,34 @@
 			numero = document.getElementById('numero').value;
 			tipo = document.getElementById('tipo').value;
 
-			if (numero.trim() == '') {
-				alert('Número deve ser informado');
+			if (numero.trim() == '' || numero.length !== 14) {
+				alert('Invalid format number');
 				return false;
 			}
 			else if (tipo.trim() == '') {
-				alert('Tipo deve ser informado');
+				alert('Numeber type must be informed');
 				return false;
 			}
 			return true;
 		}
-
+		
+		
+		/* Phone Mask*/
+		const handlePhone = (event) => {
+		  let input = event.target
+		  input.value = phoneMask(input.value)
+		}
+		
+		const phoneMask = (value) => {
+		  if (!value) return ""
+		  value = value.replace(/\D/g,'')
+		  value = value.replace(/(\d{3})(\d)/,"($1) $2")
+		  value = value.replace(/(\d)(\d{4})$/,"$1 $2")
+		  return value
+		}
+		/* ------ */
+		
+		
 	</script>
 	
 	<!-- Compiled and minified JavaScript -->

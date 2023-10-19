@@ -10,10 +10,6 @@
 
 	<!--Import Google Icon Font-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<!--Import materialize.css
-        <link type="text/css" rel="stylesheet" href="/materialize/css/materialize.css"  media="screen,projection"/>
-        <link type="text/css" rel="stylesheet" href="/materialize/css/materialize.min.css"  media="screen,projection"/>
-        -->
 
 	<!-- Compiled and minified CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -49,7 +45,7 @@
 			<span th:text="${m}"></span>
 		</div>
 
-		<div class="row">
+		<div class="row" id="myForm">
 			<form action="salvarPessoa" method="post" th:object="${pessoaobj}" class="col_s12" id="formpessoa" enctype="multipart/form-data">
 				<div class="row">
 					<div class="input-field col s6">
@@ -112,43 +108,9 @@
 					</div>
 				</div>
 
-				<div class="row">
-					<div class="input-field col s4">
-						<label for="cep" class="active">Zip Code</label>
-						<input name="cep" th:field="*{cep}" id="cep" class="validate">
-					</div>
-
-					<div class="input-field col s4">
-						<label for="rua" class="active">Street</label>
-						<input name="rua" th:field="*{rua}" id="rua" class="validate">
-					</div>
-
-					<div class="input-field col s4">
-						<label for="bairro" class="active">Neighborhood</label>
-						<input name="bairro" th:field="*{bairro}" id="bairro" class="validate">
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="input-field col s4">
-						<label for="cidade" class="active">City</label>
-						<input name="cidade" th:field="*{cidade}" id="cidade" class="validate">
-					</div>
-
-					<div class="input-field col s4">
-						<label for="uf" class="active">State</label>
-						<input name="uf" th:field="*{uf}" id="uf" class="validate">
-					</div>
-
-					<div class="input-field col s4">
-						<label for="ibge" class="active">IBGE</label>
-						<input name="ibge" th:field="*{ibge}" id="ibge" class="validate">
-					</div>
-				</div>
-
 				<!--      BUTTONS: save , clean     -->
 				<div class="row">
-					<input class="input-field col s12">
+					<div class="input-field col s12">
 						<button class="waves-effect waves-light btn" type="submit"> Save </button>
 						<buton type="button" class="waves-effect waves-light btn" onclick="limparForm();"> Clean Form</input>
 					</div>
@@ -180,10 +142,9 @@
 
 					</div>
 					<div class="input-field col s12">
-						<input class="waves-effect waves-light btn" type="submit" value="PDF"
-							onclick="document.getElementById('pesquisarPessoa').method = 'get'" />
 						<input class="waves-effect waves-light btn" type="submit" value="Search" onclick="return validateFields();"/>
 						<a class="waves-effect waves-light btn" th:href="@{/listaPessoas}">List Users</a>
+						
 					</div>
 				</div>
 			</form>
@@ -191,8 +152,9 @@
 	</fieldset>
 
 	<br /><br />
-
-	<table class="striped">
+	
+	<!-- List to display usersn-->
+	<table class="striped" th:if="${pessoas != null and not #lists.isEmpty(pessoas.content)}" id="myTable">
 		<thead>
 			<tr>
 				<th>ID</th>
@@ -204,151 +166,72 @@
 				<th>Delete</th>
 			</tr>
 		</thead>
-		<tr th:each="pessoa : ${pessoas.content}">
-			<td th:text="${pessoa.id}"></td>
-			<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}">
-					<span th:text="${pessoa.nome}" style="color:rgb(0, 0, 255)"></span>
-				</a>
-			</td>
-			<td th:text="${pessoa.sobrenome}"></td>
-			<td th:text="${pessoa.sexopessoa}"></td>
-			<td>
-				<a th:if="${pessoa.curriculo != null}" th:href="@{/baixarcurriculo/{idpessoa}(idpessoa=${pessoa.id})}"
-					style="color:rgb(0, 0, 255)">Download</a>
-				<a th:if="${pessoa.curriculo == null}" style="color:rgb(255, 0, 0)">No File</a>
-			</td>
-			<td>
-				<a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}" style="color:rgb(0, 0, 255)">Edit</a>
-			</td>
-			<td>
-				<a th:href="@{/removerpessoa/{idpessoa}(idpessoa=${pessoa.id})}"
-					style="color:rgb(255, 0, 0)">Delete</a>
-			</td>
-		</tr>
+		<tbody>
+			<tr th:each="pessoa : ${pessoas.content}">
+				<td th:text="${pessoa.id}"></td>
+				<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}">
+						<span th:text="${pessoa.nome}" style="color:rgb(0, 0, 255)"></span>
+					</a>
+				</td>
+				<td th:text="${pessoa.sobrenome}"></td>
+				<td th:text="${pessoa.sexopessoa}"></td>
+				<td>
+					<a th:if="${pessoa.curriculo != null}" th:href="@{/baixarcurriculo/{idpessoa}(idpessoa=${pessoa.id})}"
+						style="color:rgb(0, 0, 255)">Download</a>
+					<a th:if="${pessoa.curriculo == null}" style="color:rgb(255, 0, 0)">No File</a>
+				</td>
+				<td>
+					<a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}" style="color:rgb(0, 0, 255)" >Edit</a>
+				</td>
+				<td>
+					<a th:href="@{/removerpessoa/{idpessoa}(idpessoa=${pessoa.id})}"
+						style="color:rgb(255, 0, 0)">Delete</a>
+				</td>
+			</tr>
+		</tbody>
 	</table>
 
-	<!-- Pagination -->
-	<div class="row" style="margin-top: 30px;">		
+	<!-- Links for Pagination under the List -->
+	<div class="row" style="margin-top: 30px;" th:if="${pessoas != null and not #lists.isEmpty(pessoas.content)}" >		
 		<center>				
-			<span th:if="${pessoas.hasPrevious()}">
-				<a th:href="@{/pessoaspag(page=${pessoas.number - 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Anterior</a>
+			<span th:if="${pessoas != null and pessoas.hasPrevious()}">
+				<a th:href="@{/pessoaspag(page=${pessoas.number - 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa}, sexoPesquisa=${sexoPesquisa})}" >Previous</a>
 			</span>
 		
 			<th:block th:each="i: ${#numbers.sequence(0, pessoas.totalPages -1)}">
-				<a th:href="@{/pessoaspag(page=${i}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">[[ ${i} + 1 ]]</a>
+				<a th:href="@{/pessoaspag(page=${i}, size=${pessoas.size}, nomePesquisa=${nomePesquisa}, sexoPesquisa=${sexoPesquisa})}" >[[ ${i} + 1 ]]</a>
 			</th:block>
 				
 			<span th:if="${pessoas.hasNext()}">
-				<a th:href="@{/pessoaspag(page=${pessoas.number + 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa})}">Próximo</a>
+				<a th:href="@{/pessoaspag(page=${pessoas.number + 1}, size=${pessoas.size}, nomePesquisa=${nomePesquisa}, sexoPesquisa=${sexoPesquisa})}" >Next</a>
 			</span>
 		</center>
-		<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a>
-		<a class="waves-effect waves-light btn" th:href="@{/infoPage}">More Infos</a>
 	</div>
-	<br>
+	<div th:if="${pessoas == null or #lists.isEmpty(pessoas.content)}">
+	    <p>No result found.</p>
+	</div>
+
+	
+	<a class="waves-effect waves-light btn" th:href="@{/logout}">Logout</a>
+	<a class="waves-effect waves-light btn" th:href="@{/infoPage}">More Infos</a>
+	<br><br><br>
 
 
-	<!-- Compiled and minified JavaScript -->
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-	<!--JavaScript at end of body for optimized loading
-		<script type="text/javascript" src="/materialize/js/materialize.js"></script>
-		<script type="text/javascript" src="/materialize/js/materialize.min.js"></script>
-		-->
 
-	<!-- Adicionando Javascript 
-		$(document).ready(function () { ... } ); Quando a tela inicia os scripts são lidos automaticamente
-	-->
 	<script type="text/javascript">
 	
-	// clean Form for new User Registration	
-	function limparForm() {
-			var elementos = document.getElementById("formpessoa").elements; /*Retorna os elementos html dentro do form*/
-				
-			document.getElementById("nome").value = '';
-			document.getElementById("sobrenome").value = '';
-			document.getElementById("dataNascimento").value = ''; 
-			document.getElementById("idade").value = '0';
-			document.getElementById("file").value = '';
-			document.getElementById("cep").value = '';
-			document.getElementById("rua").value = '';
-			document.getElementById("bairro").value = '';
-			document.getElementById("cidade").value = '';
-			document.getElementById("uf").value = '';
-			document.getElementById("ibge").value = '';
-			
+		// clean Form for new User Registration	
+		function limparForm() {
+				var elementos = document.getElementById("formpessoa").elements; /*Retorna os elementos html dentro do form*/
+					
+				document.getElementById("nome").value = '';
+				document.getElementById("sobrenome").value = '';
+				document.getElementById("dataNascimento").value = ''; 
+				document.getElementById("idade").value = '0';
+				document.getElementById("file").value = '';
 		}
-
-		//  transform dataField into Calendar 
-		/*
-		$('#dataNascimento').datepicker({
-					showOthermonths:true,
-			format: 'yyyy-mm-dd'
-		});*/
-
-
-		$(document).ready(function () {
-
-			function limpa_formulário_cep() {
-				// Limpa valores do formulário de cep.
-				$("#rua").val("");
-				$("#bairro").val("");
-				$("#cidade").val("");
-				$("#uf").val("");
-				$("#ibge").val("");
-			}
-
-			//Quando o campo cep perde o foco.
-			$("#cep").blur(function () {
-
-				//Nova variável "cep" somente com dígitos.
-				var cep = $(this).val().replace(/\D/g, '');
-
-				//Verifica se campo cep possui valor informado.
-				if (cep != "") {
-
-					//Expressão regular para validar o CEP.
-					var validacep = /^[0-9]{8}$/;
-
-					//Valida o formato do CEP.
-					if (validacep.test(cep)) {
-
-						//Preenche os campos com "..." enquanto consulta webservice.
-						$("#rua").val("...");
-						$("#bairro").val("...");
-						$("#cidade").val("...");
-						$("#uf").val("...");
-						$("#ibge").val("...");
-
-						//Consulta o webservice viacep.com.br/
-						$.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
-
-							if (!("erro" in dados)) {
-								//Atualiza os campos com os valores da consulta.
-								$("#rua").val(dados.logradouro);
-								$("#bairro").val(dados.bairro);
-								$("#cidade").val(dados.localidade);
-								$("#uf").val(dados.uf);
-								$("#ibge").val(dados.ibge);
-							} //end if.
-							else {
-								//CEP pesquisado não foi encontrado.
-								limpa_formulário_cep();
-								alert("CEP não encontrado.");
-							}
-						});
-					} //end if.
-					else {
-						//cep é inválido.
-						limpa_formulário_cep();
-						alert("Formato de CEP inválido.");
-					}
-				} //end if.
-				else {
-					//cep sem valor, limpa formulário.
-					limpa_formulário_cep();
-				}
-			});
-		});
 
 
 		function calculateAge() {
@@ -385,6 +268,12 @@
 		
 		    return true; // Permite o envio do formulário se pelo menos um campo estiver preenchido
 		}
+		
+
+    	
+
+		
+
 
 
 	</script>
