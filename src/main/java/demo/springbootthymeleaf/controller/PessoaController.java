@@ -43,7 +43,6 @@ public class PessoaController {
 	
 	@Autowired
 	private ProfissaoRepository profissaoRepository;
-	
 
 	@RequestMapping(method = RequestMethod.GET, value = "/cadastroPessoa")
 	public ModelAndView inicio() {
